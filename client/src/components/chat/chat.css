@@ -1,0 +1,14 @@
+.chatArea{
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.wholeChat{
+    height: 50vh;
+    width: 80vw;
+}
+
+.chatContainer{
+    display: flex;
+    justify-content: center;
+}
