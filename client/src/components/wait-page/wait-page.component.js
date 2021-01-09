@@ -7,16 +7,16 @@ import axios from 'axios';
 import { Row, InputGroup, Button, Container } from 'react-bootstrap';
 import Chat from '../chat/chat.component'
 
-let socket = io;
+
 
 function WaitPage({ location }) {
     const ENDPOINT = 'http://localhost:5000';
-
+    let socket = io(ENDPOINT);
     const { roomId, username } = queryString.parse(location.search)
 
     return(
     <Container style={{height: "100vh"}} fluid="sm" className="my-4">
-        <Chat location={location} />
+        <Chat location={location} socket={socket} />
         <Row className="justify-content-center">
             <Link  to={`/searchSpot?=${roomId}`}>
                 <Button>Click to Start</Button>

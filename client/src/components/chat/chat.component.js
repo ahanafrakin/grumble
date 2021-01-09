@@ -10,10 +10,10 @@ import io from 'socket.io-client';
 import axios from 'axios';
 
 
-let socket = io;
+// let socket = io;
 
-function Chat({ location }){
-    const ENDPOINT = 'http://localhost:5000';
+function Chat({ location, socket }){
+    // const ENDPOINT = 'http://localhost:5000';
 
     const [roomId, setRoomName] = useState('');
     const [user, setUser] = useState('');
@@ -29,7 +29,7 @@ function Chat({ location }){
         setRoomName(roomId)
         setUser(username)
 
-        socket = io(ENDPOINT);
+        // socket = io(ENDPOINT);
 
         socket.emit('join', ({ roomId, username }))
 
@@ -38,13 +38,14 @@ function Chat({ location }){
             socket.emit('disconnect')
             socket.off()
         }
-    }, [ENDPOINT, location.search])
+    }, [location.search])//[ENDPOINT, location.search])
 
     //For sending messages
     useEffect(()=>{
         socket.on('message', (receivedMessage)=>{
             //Add message from server to the messages list
-            let addedMessage = {name: receivedMessage.name, message: receivedMessage.message}
+            console.log(receivedMessage)
+            let addedMessage = {name: receivedMessage.user, message: receivedMessage.message}
             setMessages(messages => [...messages, addedMessage])
         })
 

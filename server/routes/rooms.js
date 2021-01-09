@@ -86,10 +86,33 @@ const createRoom = (req, res) => {
         
 }
 
-const addUser = (req, res) => {
-    const username = req.body.username
-    const roomId = req.params.id
-    const socketId = req.body.socketId
+// const addUser = (req, res) => {
+//     const username = req.body.username
+//     const roomId = req.params.id
+//     const socketId = req.body.socketId
+//     console.log(req.params.id)
+//     const newUser = new User({
+//         username: username,
+//         roomId: roomId,
+//         socketId: socketId
+//     })
+//     newUser.save()
+//     .then(
+//         Room.updateOne({roomId: req.params.id},
+//             { $push: {users: newUser._id} },
+//              (err, result) => {
+//                  if (err){
+//                      res.send(err)
+//                  }
+//                  else {
+//                      res.send(result)
+//                  }
+//              })
+//     )
+//     .catch(err=>res.send(err))
+    
+// }
+const addUser = (username, roomId, socketId) => {
     const newUser = new User({
         username: username,
         roomId: roomId,
@@ -97,19 +120,21 @@ const addUser = (req, res) => {
     })
     newUser.save()
     .then(
-        Room.updateOne({roomId: req.params.id},
+        Room.updateOne({roomId: roomId},
             { $push: {users: newUser._id} },
              (err, result) => {
                  if (err){
-                     res.send(err)
+                     console.log(err)
+                     return(err)
+                    //  res.send(err)
                  }
                  else {
-                     res.send(result)
+                    return
+                    //  res.send(result)
                  }
              })
     )
-    .catch(err=>res.send(err))
-    
+    .catch((err)=> {console.log(err); return(err)})
 }
 
 const deleteUser = (req, res) => {
@@ -168,5 +193,6 @@ router.route('/:id/delete_room').delete((req, res) => deleteRoom(req, res))
 
 router.route('/test').get((req,res) => test(req,res))
 
-module.exports = router;
-exports.addUser = addUser;
+module.exports.addUser = addUser;
+module.exports.router = router;
+// exports.addUser = addUser;

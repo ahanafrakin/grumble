@@ -6,12 +6,12 @@ const mongoose = require('mongoose');
 const http = require('http');
 const axios = require('axios');
 require('dotenv').config();
-const { addUser } = require("./routes/rooms")
+const addUser = require("./routes/rooms").addUser
+const roomsRouter = require("./routes/rooms").router
+const usersRouter = require('./routes/users');
 
 //TODO: Figure out how to change env variables (I think its in package.json)
 const PORT = process.env.PORT || 5000
-
-const router = require('./routes/router');
 
 //Mongodb Connection
 const uri = process.env.ATLAS_URI;
@@ -26,12 +26,7 @@ const { callbackify } = require('util');
 const app = express();
 const server = http.createServer(app);
 app.use(cors())
-app.use(router);
 app.use(express.json());
-// const io = socketio(server);
-
-const roomsRouter = require('./routes/rooms');
-const usersRouter = require('./routes/users');
 
 //When user goes to /room, it would load what's in roomsRouter
 app.use('/rooms', roomsRouter);
@@ -45,16 +40,17 @@ io.on('connection', (socket) => {
     console.log('We have a new connection');
 
     socket.on('join', ({ roomId, username }) =>{
-        axios.put(`${BACKENDLINK}/rooms/${roomId}/add_user`,{
-            "username": username, 
-            "roomId": roomId,
-            "socketId": socket.id})
-            .catch(err=>console.log(err))
+        // axios.put(`${BACKENDLINK}/rooms/${roomId}/add_user`,{
+        //     "username": username, 
+        //     "roomId": roomId,
+        //     "socketId": socket.id})
+        //     .catch(err=>console.log(err))
+        addUser(username, roomId, socket.id)
 
         socket.join(roomId)
         
-        socket.emit('message', {user: 'admin', text: `${username} welcome to the room ${roomId}`})
-        socket.broadcast.to(roomId).emit('message', {user: 'admin', text: `${username} has joined.`})
+        socket.emit('message', {user: 'Admin', message: `${username} welcome to the room ${roomId}`})
+        socket.broadcast.to(roomId).emit('message', {user: 'admin', message: `${username} has joined.`})
 
         axios.get(`${BACKENDLINK}/rooms/${roomId}/users`)
         .then(result=>{
@@ -73,8 +69,8 @@ io.on('connection', (socket) => {
         axios.get(`${BACKENDLINK}/users/find_user_by_socketid/${socket.id}`)
         .then(user=>{
             send_msg = {
-                name: user.data.username,
-                message: message
+                user: user.data.username,
+                text: message
             }
             io.to(user.data.roomId).emit('message', send_msg)
         })
