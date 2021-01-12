@@ -9,9 +9,9 @@ import Chat from '../chat/chat.component'
 
 
 
-function WaitPage({ location }) {
+function WaitPage({ location, socket }) {
     const ENDPOINT = 'http://localhost:5000';
-    let socket = io(ENDPOINT);
+    // let socket = io(ENDPOINT);
     const { roomId, username } = queryString.parse(location.search)
 
     return(

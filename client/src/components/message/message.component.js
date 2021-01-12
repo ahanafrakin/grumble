@@ -1,17 +1,30 @@
 import ReactDOM from 'react-dom';
-import React from 'react';
+import React, {useEffect, useRef} from 'react';
 import { Container, Card } from "react-bootstrap"
+import ScrollToBottom from 'react-scroll-to-bottom';
 import "bootstrap/dist/css/bootstrap.css"
 import "./message.css"
 
 
-function Message({name, message}){
+function Messages({messages}){
+    const messagesEndRef = useRef(null)
+
+    const scrollToBottom = () => {
+        messagesEndRef.current.scrollIntoView({ behavior: "smooth" })
+    }
+
+  useEffect(scrollToBottom, [messages]);
     return(
-        <Card className="message">
-            <Container className="message-name">{name}</Container>
-            <Container className="message-text">{message}</Container>
-        </Card>
+        <div>
+            {messages.map((text)=>(
+                <Card className="message">
+                    <Container className="message-name">{text.name}</Container>
+                    <Container className="message-text">{text.message}</Container>
+                </Card>
+            ))}
+            <div ref={messagesEndRef} />
+        </div>
     )
 }
 
-export default Message
+export default Messages

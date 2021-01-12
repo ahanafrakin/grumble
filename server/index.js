@@ -6,9 +6,10 @@ const mongoose = require('mongoose');
 const http = require('http');
 const axios = require('axios');
 require('dotenv').config();
-const addUser = require("./routes/rooms").addUser
+const { roomUsers, addUser, deleteUser, deleteRoom } = require("./queries/rooms")
+const { allUsers, deleteBySocketId, findUserBySocketId } = require("./queries/users")
 const roomsRouter = require("./routes/rooms").router
-const usersRouter = require('./routes/users');
+
 
 //TODO: Figure out how to change env variables (I think its in package.json)
 const PORT = process.env.PORT || 5000
@@ -23,6 +24,7 @@ connection.once('open', ()=>{
 
 const BACKENDLINK = "http://localhost:5000"
 const { callbackify } = require('util');
+const { query } = require('express');
 const app = express();
 const server = http.createServer(app);
 app.use(cors())
@@ -30,56 +32,55 @@ app.use(express.json());
 
 //When user goes to /room, it would load what's in roomsRouter
 app.use('/rooms', roomsRouter);
-app.use('/users', usersRouter);
 
 server.listen(PORT, ()=> console.log(`Server has started on port ${PORT}`));
 const io = socketio.listen(server);
 io.origins('*:*')
 
+const adminUsername = 'Admin'
+
 io.on('connection', (socket) => {
     console.log('We have a new connection');
 
-    socket.on('join', ({ roomId, username }) =>{
-        // axios.put(`${BACKENDLINK}/rooms/${roomId}/add_user`,{
-        //     "username": username, 
-        //     "roomId": roomId,
-        //     "socketId": socket.id})
-        //     .catch(err=>console.log(err))
-        addUser(username, roomId, socket.id)
-
-        socket.join(roomId)
+    socket.on('join', ({ roomId, username }) => {
+        addUser(username, roomId, socket.id).then(addUserRes => {
+            console.log(`Successfully added ${username} to the room.`)
+            socket.join(roomId)
         
-        socket.emit('message', {user: 'Admin', message: `${username} welcome to the room ${roomId}`})
-        socket.broadcast.to(roomId).emit('message', {user: 'admin', message: `${username} has joined.`})
+            socket.emit('message', {user: adminUsername, message: `${username} welcome to the room ${roomId}`})
+            socket.broadcast.to(roomId).emit('message', {user: adminUsername, message: `${username} has joined.`})
 
-        axios.get(`${BACKENDLINK}/rooms/${roomId}/users`)
-        .then(result=>{
-            io.to(roomId).emit('roomUsers', {
-                roomId: roomId,
-                username: result.data.users
+            roomUsers(roomId)
+            .then( usersList => {
+                io.to(roomId).emit('roomUsers', {
+                    roomId: roomId,
+                    username: usersList
+                })
+                console.log("Succesfuly sent list of users")
+                console.log(usersList)
             })
+            .catch(err => {console.log(`Failed to send list of users in room ${roomId}.`); console.log(err)}) 
         })
-        .catch(err=>console.log(err))
-        
-           
+        .catch(err => console.log(`Failed to add ${username} to the room. The error is ${err}`))
     });
 
     socket.on('sendMessage', (message)=>{
         //We have the id from the socket that sent the message
-        axios.get(`${BACKENDLINK}/users/find_user_by_socketid/${socket.id}`)
-        .then(user=>{
+        findUserBySocketId(socket.id)
+        .then((queryResult) => {
+            console.log(`Found that the user sending message is ${queryResult.username}`)
             send_msg = {
-                user: user.data.username,
-                text: message
+                user: queryResult.username,
+                message: message
             }
-            io.to(user.data.roomId).emit('message', send_msg)
+            io.to(queryResult.roomId).emit('message', send_msg)
         })
+        .catch(()=>console.log(`Failed to send message`))
     })
 
     socket.on('disconnect', ()=>{
-        console.log(socket.id)
-        axios.delete(`${BACKENDLINK}/users/delete_by_socketid/${socket.id}`)
-        .catch(err=>console.log(err))
-        console.log('User has left')
+        deleteBySocketId(socket.id)
+        .then(test => console.log(`Successfully deleted user.`))
+        .catch(err => console.log(err))
     });
 });

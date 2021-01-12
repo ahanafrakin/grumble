@@ -4,7 +4,7 @@ import { Row, InputGroup, Button, Container, Card, FormControl} from 'react-boot
 import ScrollToBottom from 'react-scroll-to-bottom';
 import "bootstrap/dist/css/bootstrap.css"
 import "./chat.css"
-import Message from "../message/message.component"
+import Messages from "../message/message.component"
 import queryString from 'query-string';
 import io from 'socket.io-client';
 import axios from 'axios';
@@ -74,12 +74,7 @@ function Chat({ location, socket }){
             <Card className="wholeChat">
                 <Card.Header className="text-center">Wait Room: {roomId}</Card.Header>
                 <Container className="chatArea">
-                <ScrollToBottom>
-                    {messages.map((text)=>
-                        <Message name={text.name} message={text.message} />
-                    )}
-                </ScrollToBottom>
-                
+                    <Messages messages={messages}/>
                 </Container>
                 <Card.Footer>
                     <InputGroup className="mb-3">

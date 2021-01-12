@@ -24,12 +24,8 @@ const roomSchema = new Schema({
         type: String,
         requried: true
     },
-    // users: {
-    //     type: [User],
-    //     required: true
-    // },
     users: {
-        type: [mongoose.Schema.Types.ObjectId],
+        type: [{userObjectId: mongoose.Schema.Types.ObjectId, username: String}],
         required: true
     },
     radius: {
