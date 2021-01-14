@@ -1,0 +1,7 @@
+.content{
+    height: 80vh;
+    flex-wrap: nowrap;
+    margin-left: 10vw;
+    margin-right: 10vw;
+    box-sizing: border-box
+}

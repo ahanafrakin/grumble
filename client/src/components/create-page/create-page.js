@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
 import { Form, Button, Container, Row, Column, Card, DropdownButton, Dropdown } from "react-bootstrap"
-import Map from "../map/map.component"
+import Map from "../map/map"
 
 function CreatePage() {
     const history = useHistory()

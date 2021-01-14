@@ -43,44 +43,55 @@ io.on('connection', (socket) => {
     console.log('We have a new connection');
 
     socket.on('join', ({ roomId, username }) => {
-        addUser(username, roomId, socket.id).then(addUserRes => {
+        addUser(username, roomId, socket.id)
+        .then(addUserRes => {
             console.log(`Successfully added ${username} to the room.`)
             socket.join(roomId)
         
             socket.emit('message', {user: adminUsername, message: `${username} welcome to the room ${roomId}`})
             socket.broadcast.to(roomId).emit('message', {user: adminUsername, message: `${username} has joined.`})
 
-            roomUsers(roomId)
-            .then( usersList => {
-                io.to(roomId).emit('roomUsers', {
-                    roomId: roomId,
-                    username: usersList
-                })
-                console.log("Succesfuly sent list of users")
-                console.log(usersList)
-            })
-            .catch(err => {console.log(`Failed to send list of users in room ${roomId}.`); console.log(err)}) 
+            return roomUsers(roomId)
         })
-        .catch(err => console.log(`Failed to add ${username} to the room. The error is ${err}`))
+        .then(usersList => {
+            io.to(roomId).emit('roomUsers', {
+                roomId: roomId,
+                usersList: usersList
+            })
+        })
+        .catch(err => console.log(err))
     });
 
     socket.on('sendMessage', (message)=>{
         //We have the id from the socket that sent the message
         findUserBySocketId(socket.id)
         .then((queryResult) => {
-            console.log(`Found that the user sending message is ${queryResult.username}`)
             send_msg = {
                 user: queryResult.username,
                 message: message
             }
             io.to(queryResult.roomId).emit('message', send_msg)
         })
-        .catch(()=>console.log(`Failed to send message`))
+        .catch((err)=>console.log(err))
     })
 
     socket.on('disconnect', ()=>{
-        deleteBySocketId(socket.id)
-        .then(test => console.log(`Successfully deleted user.`))
+        let tempRoomId = ''
+        // First get the room id of the user being deleted
+        findUserBySocketId(socket.id)
+        .then((user) => {
+            tempRoomId = user.roomId
+            // Delete the user
+            return deleteBySocketId(socket.id)
+        })
+        .then(() => {return roomUsers(tempRoomId)})
+        // Send the updated list of users to the room that user was in
+        .then((usersList) => {
+            io.to(tempRoomId).emit('roomUsers', {
+                roomId: tempRoomId,
+                usersList: usersList
+            })
+        })
         .catch(err => console.log(err))
     });
 });

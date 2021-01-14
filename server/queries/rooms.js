@@ -7,9 +7,9 @@ const roomUsers = (roomId) => {
     // Find one returns document whereas find returns cursor
     return new Promise((resolve, reject) => {
         Room.findOne({roomId: roomId}, "users").lean()
-        .then(foundUsers => 
+        .then((foundUsers) => {
             resolve(foundUsers.users.map(user => user.username))
-            )
+        })
         .catch(err => {reject(err)} )
     })
 }
@@ -40,29 +40,25 @@ const addUser = (username, roomId, socketId) => {
 
 const deleteUser = (userObjectId, roomId) => {
     return new Promise((resolve, reject) => {
-        Room.updateOne({roomId: roomId},
-            { $pull: {users: {userObjectId: userObjectId}}},
-            (err, result) => {
-                if (err){
-                    reject(err) 
-                }
-                else {
-                    Room.findOne({roomId: roomId}).lean()
-                        .then(foundRoom => {
-                            if(foundRoom.users.length == 0){
-                                console.log("Deleting room")
-                                deleteRoom(roomId)
-                                .then(
-                                    console.log(`Successfully deleted room ${roomId}.`)
-                                )
-                            }
-                            else{
-                                resolve(true)
-                            }
-                        })
-                        .catch(err => reject(err)) 
-                }
-            })
+        console.log("We just started deleting the user")
+        Room.updateOne({roomId: roomId}, { $pull: {users: {userObjectId: userObjectId}}})
+        .then(() => {return Room.findOne({roomId: roomId}).lean()})
+        .then((foundRoom) => {
+            console.log("Printing out the room")
+            if(foundRoom.users.length == 0){
+                console.log("Deleting room")
+                deleteRoom(roomId)
+                .then(() => {
+                    console.log(`Successfully deleted room ${roomId}.`)
+                    resolve(true)
+                })
+                .catch((err) => {resolve(err)})
+            }
+            else{
+                resolve(true)
+            }
+        })    
+        .catch((err) => reject(err)) 
     })
 }
 
@@ -70,7 +66,7 @@ const deleteRoom = (roomId) => {
     return new Promise((resolve,reject)=>{
         Room.findOneAndDelete({roomId: roomId})
         .then(() =>  {resolve(true)})
-        .catch(err => reject(err));
+        .catch((err) => reject(err));
     })
 }
 

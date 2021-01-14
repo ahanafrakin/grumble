@@ -1,14 +1,17 @@
 .chatArea{
-    height: 100vh;
+    height: 50vh;
     overflow-y: auto;
 }
 
 .wholeChat{
     height: 50vh;
-    width: 80vw;
+    max-width: 60vw;
+    min-width: 40vw;
+    /* width: vw; */
 }
 
 .chatContainer{
-    display: flex;
-    justify-content: center;
+    margin-right: 5px;
+    padding-right: 0;
+    
 }

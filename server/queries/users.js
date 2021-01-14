@@ -15,15 +15,16 @@ const allUsers = () => {
 const deleteBySocketId = (socketId) => {
     return new Promise((resolve, reject) => {
         User.findOne({socketId: socketId})
-        .then((findResult)=>{ deleteUser(findResult._id, findResult.roomId) })
-        .then(User.findOneAndDelete({socketId: socketId}))
-        .then(() => resolve(true))
-        .catch(err => reject(err))
+        .then((findResult)=>{return deleteUser(findResult._id, findResult.roomId) })
+        .then(() => {return User.findOneAndDelete({socketId: socketId})})
+        .then(() => {resolve(true)})
+        .catch(err => {reject(err)})
     })
 }
 
 const findUserBySocketId = (socketId) => {
     return new Promise((resolve, reject) => {
+        console.log(socketId)
         User.findOne({socketId: socketId})
         .then((result) => {resolve(result)})
         .catch(err => {reject(err)})

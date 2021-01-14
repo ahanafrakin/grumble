@@ -1,35 +1,29 @@
 import ReactDOM from 'react-dom';
 import React, { useState, useContext, useEffect, useHistory } from 'react';
-import { Row, InputGroup, Button, Container, Card, FormControl} from 'react-bootstrap';
+import { Row, Col, InputGroup, Button, Container, Card, FormControl} from 'react-bootstrap';
 import ScrollToBottom from 'react-scroll-to-bottom';
 import "bootstrap/dist/css/bootstrap.css"
 import "./chat.css"
-import Messages from "../message/message.component"
+import Messages from "../message/message"
 import queryString from 'query-string';
 import io from 'socket.io-client';
 import axios from 'axios';
 
-
-// let socket = io;
-
-function Chat({ location, socket }){
-    // const ENDPOINT = 'http://localhost:5000';
+function Chat({ location, socket, setUsers }){
 
     const [roomId, setRoomName] = useState('');
     const [user, setUser] = useState('');
-    const [users, setUsers] = useState([]);
     const [message, setMessage] = useState('');
     const [messages, setMessages] = useState([]);
-    const history = useHistory;
 
+    const ENDPOINT = 'http://localhost:5000';
     //For joining
     useEffect(() => {
+        socket = io.connect((ENDPOINT))
         const { roomId, username } = queryString.parse(location.search)
         
         setRoomName(roomId)
         setUser(username)
-
-        // socket = io(ENDPOINT);
 
         socket.emit('join', ({ roomId, username }))
 
@@ -38,7 +32,7 @@ function Chat({ location, socket }){
             socket.emit('disconnect')
             socket.off()
         }
-    }, [location.search])//[ENDPOINT, location.search])
+    }, [ENDPOINT,location.search])
 
     //For sending messages
     useEffect(()=>{
@@ -58,14 +52,16 @@ function Chat({ location, socket }){
         })
 
         socket.on('roomUsers', (receivedUsers)=>{
-            console.log('test')
+            console.log(receivedUsers.usersList)
+            setUsers(receivedUsers.usersList)
         })
     }, [])
     
     const sendMessage = (event) => {
         event.preventDefault();
         if(message) {
-          socket.emit('sendMessage', message, () => setMessage(''));
+          console.log(socket)
+          socket.emit('sendMessage', message, () => {setMessage('')});
         }
     }
 
