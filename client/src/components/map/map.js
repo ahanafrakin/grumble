@@ -10,7 +10,7 @@ import axios from 'axios';
 import { GoogleMap, LoadScript, Marker, InfoWindow} from "@react-google-maps/api"
 import { Combobox, ComboboxInput, ComboboxPopover, ComboboxList, ComboboxOption} from "@reach/combobox";
 import "@reach/combobox/styles.css";
-import { Form } from "react-bootstrap"
+import { Row } from "react-bootstrap"
 import "bootstrap/dist/css/bootstrap.css"
 import usePlacesAutocomplete, { getGeocode, getLatLng } from "use-places-autocomplete";
 
@@ -23,7 +23,7 @@ const options = {
 
 const containerStyle = {
     height: "50vh",
-    width: "50vw"
+    width: "100%"
   };
 const center = {
     lat: 43.6532,
@@ -50,21 +50,21 @@ function Map({setLocation}) {
 
     return(
         <LoadScript googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY} libraries={libraries}>
-            <Search panTo={panTo} />
-            <GoogleMap
-            id="map"
-            mapContainerStyle={containerStyle}
-            zoom={8}
-            center={center}
-            options={options}
-            onClick={onMapClick}
-            onLoad={onMapLoad}
-            >
-                <Marker 
-                key={`${marker.lat}-${marker.lat}`} 
-                position={{ lat: marker.lat, lng: marker.lng }}
-                />
-            </GoogleMap>
+              <Search panTo={panTo} />
+              <GoogleMap
+              id="map"
+              mapContainerStyle={containerStyle}
+              zoom={8}
+              center={center}
+              options={options}
+              onClick={onMapClick}
+              onLoad={onMapLoad}
+              >
+                  <Marker 
+                  key={`${marker.lat}-${marker.lat}`} 
+                  position={{ lat: marker.lat, lng: marker.lng }}
+                  />
+              </GoogleMap>
         </LoadScript>
         
     )

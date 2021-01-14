@@ -26,7 +26,8 @@ const roomSchema = new Schema({
     },
     users: {
         type: [{userObjectId: mongoose.Schema.Types.ObjectId, username: String}],
-        required: true
+        required: true,
+        unique: false
     },
     radius: {
         type: Number,

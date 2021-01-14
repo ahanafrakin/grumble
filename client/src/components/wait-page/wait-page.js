@@ -7,12 +7,13 @@ import axios from 'axios';
 import { Row, Col, InputGroup, Button, Container } from 'react-bootstrap';
 import Chat from '../chat/chat'
 import UsersList from '../usersList/usersList'
+import "./wait-page.css"
 
 
 
 function WaitPage({ location, socket }) {
     const { roomId, username } = queryString.parse(location.search)
-    const [users, setUsers] = useState([]);
+    const [users, setUsers] = useState([])
 
     return(
     <Container className="content" fluid="sm">
@@ -26,7 +27,6 @@ function WaitPage({ location, socket }) {
                 <Button>Click to Start</Button>
             </Link>
         </Row>
-        
     </Container>
     )
 }

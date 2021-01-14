@@ -48,8 +48,10 @@ io.on('connection', (socket) => {
             console.log(`Successfully added ${username} to the room.`)
             socket.join(roomId)
         
-            socket.emit('message', {user: adminUsername, message: `${username} welcome to the room ${roomId}`})
-            socket.broadcast.to(roomId).emit('message', {user: adminUsername, message: `${username} has joined.`})
+            socket.emit('message',
+            {user: adminUsername, message: `${username} welcome to the room ${roomId}`})
+            socket.broadcast.to(roomId).emit('message',
+            {user: adminUsername, message: `${username} has joined.`})
 
             return roomUsers(roomId)
         })
@@ -82,6 +84,8 @@ io.on('connection', (socket) => {
         .then((user) => {
             tempRoomId = user.roomId
             // Delete the user
+            socket.broadcast.to(tempRoomId).emit('message',
+            {user: adminUsername, message: `${user.username} has left the room.`})
             return deleteBySocketId(socket.id)
         })
         .then(() => {return roomUsers(tempRoomId)})

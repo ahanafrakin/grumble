@@ -4,6 +4,7 @@ import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
 import { Form, Button, Container, Row, Column, Card, DropdownButton, Dropdown } from "react-bootstrap"
 import Map from "../map/map"
+import "./create-page.css"
 
 function CreatePage() {
     const history = useHistory()
@@ -89,11 +90,11 @@ function CreatePage() {
                         onChange={(event) => setRadius(parseInt(event.target.value))}/>
                     </Row>
                 </Form.Group>
-                <Form.Group controlId="formLocation">
+                <Form.Group controlId="formLocation" className="mapStyle">
                     <Form.Label>Please select your location on the map</Form.Label>
-                    <Row className="justify-content-center">
-                        <Map setLocation={setLocation}/>
-                    </Row>
+                    {/* <Row className="mx-2 w-75 justify-content-center mapStyle"> */}
+                        <Map style={{alignContent: "center"}} setLocation={setLocation}/>
+                    {/* </Row> */}
                 </Form.Group>
                 <Button onClick={onSubmit} className="my-2">Create Game</Button>
             </Form>

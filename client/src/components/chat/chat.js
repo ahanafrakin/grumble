@@ -1,6 +1,6 @@
 import ReactDOM from 'react-dom';
 import React, { useState, useContext, useEffect, useHistory } from 'react';
-import { Row, Col, InputGroup, Button, Container, Card, FormControl} from 'react-bootstrap';
+import { Row, InputGroup, Button, Container, Card, FormControl} from 'react-bootstrap';
 import ScrollToBottom from 'react-scroll-to-bottom';
 import "bootstrap/dist/css/bootstrap.css"
 import "./chat.css"
@@ -9,21 +9,26 @@ import queryString from 'query-string';
 import io from 'socket.io-client';
 import axios from 'axios';
 
+
+// let socket = io;
+
 function Chat({ location, socket, setUsers }){
+    // const ENDPOINT = 'http://localhost:5000';
 
     const [roomId, setRoomName] = useState('');
     const [user, setUser] = useState('');
     const [message, setMessage] = useState('');
     const [messages, setMessages] = useState([]);
+    const history = useHistory;
 
-    const ENDPOINT = 'http://localhost:5000';
     //For joining
     useEffect(() => {
-        socket = io.connect((ENDPOINT))
         const { roomId, username } = queryString.parse(location.search)
         
         setRoomName(roomId)
         setUser(username)
+
+        // socket = io(ENDPOINT);
 
         socket.emit('join', ({ roomId, username }))
 
@@ -32,7 +37,7 @@ function Chat({ location, socket, setUsers }){
             socket.emit('disconnect')
             socket.off()
         }
-    }, [ENDPOINT,location.search])
+    }, [location.search])//[ENDPOINT, location.search])
 
     //For sending messages
     useEffect(()=>{
@@ -60,8 +65,7 @@ function Chat({ location, socket, setUsers }){
     const sendMessage = (event) => {
         event.preventDefault();
         if(message) {
-          console.log(socket)
-          socket.emit('sendMessage', message, () => {setMessage('')});
+          socket.emit('sendMessage', message, () => setMessage(''));
         }
     }
 

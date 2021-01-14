@@ -4,19 +4,17 @@ import Header from './components/header/header'
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import io from 'socket.io-client';
 import MainPage from './components/main-page/main-page'
-import AboutPage from './components/about-page/about-page'
 import CreatePage from './components/create-page/create-page'
-import WaitPage from './components/wait-page/wait-page.component'
+import WaitPage from './components/wait-page/wait-page'
 
-let socket = io;
-
-const App = () => {	
+const App = () => {
+	const ENDPOINT = 'http://localhost:5000';
+	let socket = io(ENDPOINT);
 	return(
 		<Router>
 			<div>
 				<Header />
 				<Route path="/" exact component={MainPage} />
-				<Route path="/about" component={AboutPage} />
 				<Route path="/creategame" component={CreatePage} />
 				<Route path="/waitpage" render={(props => <WaitPage {...props} socket={socket}/>)} />
 			</div>

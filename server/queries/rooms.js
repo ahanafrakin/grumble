@@ -40,16 +40,12 @@ const addUser = (username, roomId, socketId) => {
 
 const deleteUser = (userObjectId, roomId) => {
     return new Promise((resolve, reject) => {
-        console.log("We just started deleting the user")
         Room.updateOne({roomId: roomId}, { $pull: {users: {userObjectId: userObjectId}}})
         .then(() => {return Room.findOne({roomId: roomId}).lean()})
         .then((foundRoom) => {
-            console.log("Printing out the room")
             if(foundRoom.users.length == 0){
-                console.log("Deleting room")
                 deleteRoom(roomId)
                 .then(() => {
-                    console.log(`Successfully deleted room ${roomId}.`)
                     resolve(true)
                 })
                 .catch((err) => {resolve(err)})

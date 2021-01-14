@@ -24,7 +24,6 @@ const deleteBySocketId = (socketId) => {
 
 const findUserBySocketId = (socketId) => {
     return new Promise((resolve, reject) => {
-        console.log(socketId)
         User.findOne({socketId: socketId})
         .then((result) => {resolve(result)})
         .catch(err => {reject(err)})
