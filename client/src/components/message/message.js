@@ -17,7 +17,7 @@ function Messages({messages}){
     return(
         <div>
             {messages.map((text)=>(
-                <Card className="message">
+                <Card bg="dark" text="light" className="message">
                     <Container className="message-name">{text.name}</Container>
                     <Container className="message-text">{text.message}</Container>
                 </Card>

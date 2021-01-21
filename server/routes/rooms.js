@@ -56,7 +56,7 @@ const createRoom = (req, res) => {
             lng: lng,
             searchTerms: searchTerms,
             numPlaces: numPlaces,
-            placesQuery: placesQuery.data,
+            placesQuery: placesQuery.data.results.slice(0,numPlaces),
             radius: radius,
             users: new Array()
         })
@@ -67,6 +67,7 @@ const createRoom = (req, res) => {
     .catch(err => res.status(400).json('Error: ' + err))
         
 }
+
 
 const test = (req, res) => {
     axios.get("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670522,151.1957362&radius=1500&type=restaurant&keyword=cruise&key=AIzaSyBx9OOKHZvIsfRoRHttvMBfpl-nh8ND3Xc")

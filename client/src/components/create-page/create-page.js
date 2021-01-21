@@ -57,7 +57,7 @@ function CreatePage() {
 
     return(
     <Container fluid="sm" className="my-4">
-        <Card>
+        <Card bg="dark" text="light">
             <Card.Header className="text-center">Create A New Session</Card.Header>
             <Form className="text-center">
                 <Form.Group className="mt-2" controlId="formActivities">

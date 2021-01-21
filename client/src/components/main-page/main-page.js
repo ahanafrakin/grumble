@@ -7,7 +7,7 @@ import "bootstrap/dist/css/bootstrap.css"
 import { Form, Button, Container, Row, Column, Card } from "react-bootstrap"
 
 function MainPage() {
-    const BACKENDLINK = "http://localhost:5000"
+    const ENDPOINT = "http://localhost:5000"
     const history = useHistory()
     const [gameId, setGameId] = useState('')
     const [username, setUsername] = useState('')
@@ -36,7 +36,7 @@ function MainPage() {
     }
 
     useEffect(() => {
-        axios.get(`${BACKENDLINK}/rooms/${gameId}/room_available`)
+        axios.get(`${ENDPOINT}/rooms/${gameId}/room_available`)
             .then((res) => {
                 if(res.data.Status == true){
                     setValidGameId(true)
@@ -50,7 +50,7 @@ function MainPage() {
 
     useEffect(() => {
         if(validGameId){
-            axios.get(`${BACKENDLINK}/rooms/${gameId}/user_available`, {params: {"username": username}})
+            axios.get(`${ENDPOINT}/rooms/${gameId}/user_available`, {params: {"username": username}})
                 .then((res) => {
                     if(res.data.Status == true){
                         setValidGameUser(true)
@@ -64,7 +64,7 @@ function MainPage() {
 
     return(
     <Container fluid="sm" className="my-4">
-        <Card>
+        <Card bg="dark" text="light">
             <Card.Header className="text-center">Join An Existing Game</Card.Header>
             <Form className="text-center">
                 <Form.Group controlId="formGameId">
@@ -90,14 +90,14 @@ function MainPage() {
                 </Form.Group>
             </Form>
         </Card>
-        <Card className="my-3">
-                <Card.Header className="text-center">Create your own game</Card.Header>
-                <Row className="justify-content-center my-4">
-                    <Link to={`/creategame`}>
-                        <Button>Create Game</Button>
-                    </Link>
-                </Row>
-            </Card>
+        <Card bg="dark" text="light" className="my-3">
+            <Card.Header className="text-center">Create your own game</Card.Header>
+            <Row className="justify-content-center my-4">
+                <Link to={`/creategame`}>
+                    <Button>Create Game</Button>
+                </Link>
+            </Row>
+        </Card>
     </Container>
     )
 }

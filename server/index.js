@@ -6,8 +6,8 @@ const mongoose = require('mongoose');
 const http = require('http');
 const axios = require('axios');
 require('dotenv').config();
-const { roomUsers, addUser, deleteUser, deleteRoom } = require("./queries/rooms")
-const { allUsers, deleteBySocketId, findUserBySocketId } = require("./queries/users")
+const { roomUsers, addUser, deleteUser, deleteRoom, interests, userComplete, allUsersComplete, checkFavourite } = require("./queries/rooms")
+const { allUsers, deleteBySocketId, findUserBySocketId, addUserResults } = require("./queries/users")
 const roomsRouter = require("./routes/rooms").router
 
 
@@ -22,9 +22,6 @@ connection.once('open', ()=>{
     console.log("MongooseDB database established successfully");
 })
 
-const BACKENDLINK = "http://localhost:5000"
-const { callbackify } = require('util');
-const { query } = require('express');
 const app = express();
 const server = http.createServer(app);
 app.use(cors())
@@ -77,6 +74,39 @@ io.on('connection', (socket) => {
         .catch((err)=>console.log(err))
     })
 
+    socket.on('startSearch', () => {
+        //We have the id from the socket that sent the message
+        findUserBySocketId(socket.id)
+        .then((queryResult) => {
+            io.to(queryResult.roomId).emit('receivedStart')
+        })
+        .catch((err)=>console.log(err))
+    })
+
+    socket.on('requestInterests', (roomId) => {
+        console.log(roomId)
+        interests(roomId)
+        .then((queryResult) => {
+            socket.emit('interestsList', queryResult)
+        })
+        .catch((err)=>console.log(err))
+    })
+    
+    socket.on('completedSearch', ({accepted, declined}) => {
+        socketId = socket.id
+        setRoomId = ''
+        addUserResults({socketId, accepted, declined})
+        .then(({roomId, username}) => { setRoomId=roomId; return userComplete({roomId, username})})
+        .then(() => {return allUsersComplete(setRoomId)})
+        .then((allFinished) => { if(allFinished == true) return checkFavourite(setRoomId)})
+        .then((result) => {
+            if(result){
+                io.to(setRoomId).emit('searchResults', result)
+            }
+        })
+        .catch((err) => {console.log(err)})
+    })
+    
     socket.on('disconnect', ()=>{
         let tempRoomId = ''
         // First get the room id of the user being deleted

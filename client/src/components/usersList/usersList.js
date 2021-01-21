@@ -13,7 +13,7 @@ function UsersList({ users }){
 
     return(
         <Container fluid="sm" className="my-4 listContainer" >
-            <Card className="listCard">
+            <Card bg="dark" text="light" className="listCard">
                 <Card.Header>Active Users</Card.Header>
                 <Container>
                     {users.map((user) => (

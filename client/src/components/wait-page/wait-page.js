@@ -11,21 +11,23 @@ import "./wait-page.css"
 
 
 
-function WaitPage({ location, socket }) {
+function WaitPage({ location, socketRef }) {
     const { roomId, username } = queryString.parse(location.search)
     const [users, setUsers] = useState([])
+
+    const redirectSearch = () => {
+        socketRef.current.emit("startSearch")
+    }
 
     return(
     <Container className="content" fluid="sm">
         <Row className="justify-content-md-center">
-            <Col md="auto"><Chat location={location} socket={socket} setUsers={setUsers}/></Col>
+            <Col md="auto"><Chat location={location} socketRef={socketRef} setUsers={setUsers}/></Col>
             <Col md="auto"><UsersList users={users}/></Col>
         </Row>
         
         <Row className="justify-content-center">
-            <Link  to={`/searchSpot?=${roomId}`}>
-                <Button>Click to Start</Button>
-            </Link>
+            <Button onClick={redirectSearch}>Click to Start</Button>
         </Row>
     </Container>
     )

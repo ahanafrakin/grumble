@@ -30,4 +30,22 @@ const findUserBySocketId = (socketId) => {
     })
 }
 
-module.exports = { allUsers, deleteBySocketId, findUserBySocketId };
+const addUserResults = ({socketId, accepted, declined}) => {
+    
+    return new Promise((resolve,reject) => {
+        let username = ''
+        let roomId = ''
+        User.findOne({socketId: socketId})
+        .then((result) => {
+            username = result.username
+            roomId = result.roomId
+            result.accepted = accepted.current;
+            result.declined = declined.current;
+            result.save()
+        })
+        .then(() => {resolve({roomId, username})})
+        .catch(err => {reject(err)})
+    })
+}
+
+module.exports = { allUsers, deleteBySocketId, findUserBySocketId, addUserResults };

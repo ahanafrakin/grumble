@@ -5,7 +5,7 @@ const userSchema = new Schema({
     username: {
         type: String,
         required: true,
-        unique: true,
+        unique: false,
     },
     roomId: {
         type: String,
@@ -16,6 +16,16 @@ const userSchema = new Schema({
         type: String,
         required: true,
         unique: false,
+    },
+    accepted:{
+        type: [String],
+        required: false,
+        unique: false
+    },
+    declined:{
+        type: [String],
+        required: false,
+        unique: false
     }
 });
 

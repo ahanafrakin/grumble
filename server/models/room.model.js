@@ -25,7 +25,7 @@ const roomSchema = new Schema({
         requried: true
     },
     users: {
-        type: [{userObjectId: mongoose.Schema.Types.ObjectId, username: String}],
+        type: [{userObjectId: mongoose.Schema.Types.ObjectId, username: String, completed: Boolean}],
         required: true,
         unique: false
     },
