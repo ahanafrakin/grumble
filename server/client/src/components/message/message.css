@@ -1,0 +1,9 @@
+.message{
+    height: "100px";
+    margin-top:2vh;
+    margin-bottom:2vh;
+}
+
+.message-name{
+    font-weight:bold;
+}

@@ -1,0 +1,83 @@
+body{
+    margin: 0px;
+    padding: 0px;
+    font-family: 'Raleway', sans-serif;
+    box-sizing: border-box
+}
+
+.header-container{
+    display: flex;
+    align-items: center;
+    min-height: 60px;
+    height: 8vh;
+    background-color: #F46524;
+    justify-content: space-between;
+    text-align: center;
+
+}
+
+.button-list{
+    list-style-type: none;
+    overflow: hidden;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0;
+    flex-basis: 20%;
+    flex-grow: 1;
+}
+
+.button-list li{
+    width: 35%;
+}
+
+.header-button{
+    margin-left: 2.5%;
+    margin-right: 2.5%;
+    display: inline-block;
+    text-decoration: none;
+    background-color: white;
+    font-size: 20px;
+    border-radius: 8px;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+
+.header-button:hover{
+    background-color: yellowgreen;
+}
+
+.title-container{
+    text-align: center;
+    align-content: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.grumble-title{
+    flex-grow: 2;
+    margin: 0.25%;
+    font-size: 48px;
+    font-weight: bold;
+    color: white;
+    
+}
+
+.grumble-title:hover{
+    color: rgb(249, 221, 192);
+    text-decoration: none;
+}
+
+/* @media screen and (max-width: 700px){
+    .button-list{
+        flex-basis: unset;
+    }
+} */
+
+/* @media screen and (max-width:1000px){
+    body{
+        display: none;
+    }
+} */

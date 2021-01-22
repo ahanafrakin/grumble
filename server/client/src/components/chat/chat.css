@@ -1,0 +1,17 @@
+.chatArea{
+    height: 50vh;
+    overflow-y: auto;
+}
+
+.wholeChat{
+    height: 50vh;
+    max-width: 60vw;
+    min-width: 40vw;
+    /* width: vw; */
+}
+
+.chatContainer{
+    margin-right: 5px;
+    padding-right: 0;
+    
+}

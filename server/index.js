@@ -30,6 +30,10 @@ app.use(express.json());
 //When user goes to /room, it would load what's in roomsRouter
 app.use('/rooms', roomsRouter);
 
+if(process.env.NODE_ENV === 'production'){
+    app.use(express.static('client/build'));
+}
+
 server.listen(PORT, ()=> console.log(`Server has started on port ${PORT}`));
 const io = socketio.listen(server);
 io.origins('*:*')
