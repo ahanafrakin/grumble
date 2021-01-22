@@ -1,14 +1,11 @@
-import ReactDOM from 'react-dom';
 import React, {useEffect, useState, useRef} from 'react';
-import { Container, Card, Row, Col, Button } from "react-bootstrap"
+import { Container, Card, Row, Button } from "react-bootstrap"
 import queryString from 'query-string';
 import "bootstrap/dist/css/bootstrap.css"
-import axios from 'axios';
 import "./search-page.css"
 import StarRatings from 'react-star-ratings';
 
 function SearchPage({location, socketRef}){
-    const ENDPOINT = 'http://localhost:5000';
     const [interests, setInterests] = useState([])
     const [cost, setCost] = useState(0);
     const [results, setResults] = useState(0);
@@ -57,9 +54,9 @@ function SearchPage({location, socketRef}){
                 socketRef.current.emit("completedSearch", ({accepted, declined}))
             }
             else{
-                if(interests[0].price_level == 1) setCost('$')
-                else if(interests[0].price_level == 2) setCost('$$')
-                else if(interests[0].price_level == 3) setCost('$$$')
+                if(interests[0].price_level === 1) setCost('$')
+                else if(interests[0].price_level === 2) setCost('$$')
+                else if(interests[0].price_level === 3) setCost('$$$')
                 else setCost('$$$$')
             }
         }
@@ -87,7 +84,7 @@ function SearchPage({location, socketRef}){
                     </div>
 
                     <div className="suggestionContainer">
-                        <img className="interestImage" src={googlePhotosLink(results.photos[0].photo_reference)}/>
+                        <img alt="Suggestion Image" className="interestImage" src={googlePhotosLink(results.photos[0].photo_reference)}/>
                     </div>
 
                     <div className="lineContainer">
@@ -114,7 +111,7 @@ function SearchPage({location, socketRef}){
         return(
             <div>
                 <div className="interestContainer">
-                    <img className="interestImage" src={googlePhotosLink(interests[0].photos[0].photo_reference)}/>
+                    <img alt="Suggestion Image" className="interestImage" src={googlePhotosLink(interests[0].photos[0].photo_reference)}/>
                 </div>
 
                 <div className="lineContainer">

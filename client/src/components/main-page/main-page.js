@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import ReactDOM from 'react-dom';
-import { Link, useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 // import './main-page.styles.css'
 import "bootstrap/dist/css/bootstrap.css"
-import { Form, Button, Container, Row, Column, Card } from "react-bootstrap"
+import { Form, Button, Container, Row, Card } from "react-bootstrap"
 
 function MainPage() {
-    const ENDPOINT = "http://localhost:5000"
-    const history = useHistory()
     const [gameId, setGameId] = useState('')
     const [username, setUsername] = useState('')
     const [errorGameId, setErrorGameId] = useState('')
@@ -23,12 +20,12 @@ function MainPage() {
             gameId ? setErrorGameId(''):setErrorGameId('Please enter a valid Game Id')
             username ? setErrorUsername(''):setErrorUsername("Please enter a valid username")
         }
-        if(validGameId != true){
+        if(validGameId !== true){
             event.preventDefault()
             setErrorGameId('That game is currently not active.')
             setErrorUsername('')
         }
-        if(validGameUser != true && validGameId){
+        if(validGameUser !== true && validGameId){
             event.preventDefault()
             setErrorGameId('')
             setErrorUsername('That username is already taken.')
@@ -36,9 +33,9 @@ function MainPage() {
     }
 
     useEffect(() => {
-        axios.get(`${ENDPOINT}/rooms/${gameId}/room_available`)
+        axios.get(`/rooms/${gameId}/room_available`)
             .then((res) => {
-                if(res.data.Status == true){
+                if(res.data.Status === true){
                     setValidGameId(true)
 
                 }
@@ -50,9 +47,9 @@ function MainPage() {
 
     useEffect(() => {
         if(validGameId){
-            axios.get(`${ENDPOINT}/rooms/${gameId}/user_available`, {params: {"username": username}})
+            axios.get(`rooms/${gameId}/user_available`, {params: {"username": username}})
                 .then((res) => {
-                    if(res.data.Status == true){
+                    if(res.data.Status === true){
                         setValidGameUser(true)
                     }
                     else{

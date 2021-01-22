@@ -1,20 +1,12 @@
-import ReactDOM from 'react-dom';
 import { useHistory } from 'react-router-dom';
-import React, { useState, useContext, useEffect } from 'react';
-import { Row, InputGroup, Button, Container, Card, FormControl} from 'react-bootstrap';
-import ScrollToBottom from 'react-scroll-to-bottom';
+import React, { useState, useEffect } from 'react';
+import { InputGroup, Button, Container, Card, FormControl} from 'react-bootstrap';
 import "bootstrap/dist/css/bootstrap.css"
 import "./chat.css"
 import Messages from "../message/message"
 import queryString from 'query-string';
-import io from 'socket.io-client';
-import axios from 'axios';
-
-
-// let socket = io;
 
 function Chat({ location, socketRef, setUsers }){
-    // const ENDPOINT = 'http://localhost:5000';
     const history = useHistory()
     const [roomId, setRoomName] = useState('');
     const [message, setMessage] = useState('');
@@ -24,8 +16,6 @@ function Chat({ location, socketRef, setUsers }){
         const { roomId, username } = queryString.parse(location.search)
         
         setRoomName(roomId)
-
-        // socket = io(ENDPOINT);
 
         socketRef.current.emit('join', ({ roomId, username }))
 
@@ -40,7 +30,6 @@ function Chat({ location, socketRef, setUsers }){
     useEffect(()=>{
         socketRef.current.on('message', (receivedMessage)=>{
             //Add message from server to the messages list
-            console.log(receivedMessage)
             let addedMessage = {name: receivedMessage.user, message: receivedMessage.message}
             setMessages(messages => [...messages, addedMessage])
         })
@@ -55,7 +44,7 @@ function Chat({ location, socketRef, setUsers }){
         })
 
         socketRef.current.on('roomUsers', (receivedUsers)=>{
-            console.log(receivedUsers.usersList)
+
             setUsers(receivedUsers.usersList)
         })
     }, [])

@@ -4,13 +4,10 @@
 // https://github.com/leighhalliday/google-maps-react-2020/ 
 // and later modified
 
-import React, { useState, useContext, useRef, useCallback } from 'react';
-import ReactDOM from 'react-dom';
-import axios from 'axios';
-import { GoogleMap, LoadScript, Marker, InfoWindow} from "@react-google-maps/api"
+import React, { useState, useRef, useCallback } from 'react';
+import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api"
 import { Combobox, ComboboxInput, ComboboxPopover, ComboboxList, ComboboxOption} from "@reach/combobox";
 import "@reach/combobox/styles.css";
-import { Row } from "react-bootstrap"
 import "bootstrap/dist/css/bootstrap.css"
 import usePlacesAutocomplete, { getGeocode, getLatLng } from "use-places-autocomplete";
 

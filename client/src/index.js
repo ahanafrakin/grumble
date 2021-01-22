@@ -9,13 +9,12 @@ import WaitPage from './components/wait-page/wait-page'
 import SearchPage from './components/search-page/search-page';
 
 const App = () => {
-	const ENDPOINT = 'http://localhost:5000';
 	let socket = io;
 	let socketRef = useRef()
 	useEffect(()=>{
 		document.body.style.backgroundColor = "#121212"
 		if(!socketRef.current){
-			socket = io(ENDPOINT);
+			socket = io();
 			socketRef.current = socket;
 		}
 	},[])

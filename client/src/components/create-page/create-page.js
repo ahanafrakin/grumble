@@ -1,8 +1,7 @@
-import React, { useState, useContext } from 'react';
-import ReactDOM from 'react-dom';
-import { Link, useHistory } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import axios from 'axios';
-import { Form, Button, Container, Row, Column, Card, DropdownButton, Dropdown } from "react-bootstrap"
+import { Form, Button, Container, Row, Card } from "react-bootstrap"
 import Map from "../map/map"
 import "./create-page.css"
 
@@ -14,12 +13,10 @@ function CreatePage() {
     const [username, setUsername] = useState('');
     const [numPlaces, setNumPlaces] = useState('');
     const [radius, setRadius] = useState(10);
-    const redirect_to_search = useState('')
 
     // Error checking states
     const [errorUsername, setErrorUsername] = useState('');
     const [errorActivities, setErrorActivities] = useState('')
-    const [errorLocation, setErrorLocation] = useState('')
     const [errorNumPlaces, setErrorNumPlaces] = useState('');
     const [errorRadius, setErrorRadius] = useState('');
 
@@ -30,13 +27,11 @@ function CreatePage() {
             event.preventDefault()
             username ? setErrorUsername(''):setErrorUsername("Please enter a valid username")
             activities? setErrorActivities(''):setErrorActivities("Please enter some activities seperated by commas")
-            location ? setErrorLocation(''):setErrorLocation("Please enter your location in the form City, Country")
             radius ? setErrorRadius(''):setErrorRadius("Please enter your search radius")
             numPlaces ? setErrorNumPlaces(''):setNumPlaces("Please enter your search radius")
-            console.log(username, activities, location, radius, numPlaces)
         }
         else{
-            axios.post('http://localhost:5000/rooms/create_room',
+            axios.post('/rooms/create_room',
             {
                 lat: location.lat,
                 lng: location.lng,
@@ -45,7 +40,6 @@ function CreatePage() {
                 searchTerms: activities,
             })
                 .then((res) => {
-                    console.log(res.data)
                     roomId = res.data.roomId
                     history.push(`/waitpage?roomId=${roomId}&username=${username}`)
                 })
@@ -78,6 +72,7 @@ function CreatePage() {
                 </Form.Group>
                 <Form.Group controlId="formNumberOfPlaces">
                     <Form.Label>Select the number of places to choose from</Form.Label>
+                    <Form.Text>{errorNumPlaces}</Form.Text>
                     <Row className="justify-content-center">
                         <Form.Control className="mx-2 w-75" type="input" placeholder="Number of places up to 10"
                         onChange={(event) => setNumPlaces(event.target.value)}/>
@@ -85,6 +80,7 @@ function CreatePage() {
                 </Form.Group>
                 <Form.Group controlId="formRadius">
                     <Form.Label>Select search radius</Form.Label>
+                    <Form.Text>{errorRadius}</Form.Text>
                     <Row className="justify-content-center">
                         <Form.Control className="mx-2 w-75" type="input" placeholder="Search radius"
                         onChange={(event) => setRadius(parseInt(event.target.value))}/>
@@ -92,9 +88,7 @@ function CreatePage() {
                 </Form.Group>
                 <Form.Group controlId="formLocation" className="mapStyle">
                     <Form.Label>Please select your location on the map</Form.Label>
-                    {/* <Row className="mx-2 w-75 justify-content-center mapStyle"> */}
-                        <Map style={{alignContent: "center"}} setLocation={setLocation}/>
-                    {/* </Row> */}
+                    <Map style={{alignContent: "center"}} setLocation={setLocation}/>
                 </Form.Group>
                 <Button onClick={onSubmit} className="my-2">Create Game</Button>
             </Form>

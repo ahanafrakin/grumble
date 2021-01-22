@@ -1,13 +1,7 @@
-import ReactDOM from 'react-dom';
-import React, { useState, useContext, useEffect, useHistory } from 'react';
-import { Row, Col, InputGroup, Button, Container, Card, FormControl} from 'react-bootstrap';
-import ScrollToBottom from 'react-scroll-to-bottom';
+import React from 'react';
+import { Container, Card } from 'react-bootstrap';
 import "bootstrap/dist/css/bootstrap.css"
 import "./usersList.css"
-import Messages from "../message/message"
-import queryString from 'query-string';
-import io from 'socket.io-client';
-import axios from 'axios';
 
 function UsersList({ users }){
 

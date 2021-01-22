@@ -1,7 +1,5 @@
-import ReactDOM from 'react-dom';
 import React, {useEffect, useRef} from 'react';
 import { Container, Card } from "react-bootstrap"
-import ScrollToBottom from 'react-scroll-to-bottom';
 import "bootstrap/dist/css/bootstrap.css"
 import "./message.css"
 
